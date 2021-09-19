@@ -5,7 +5,7 @@ import {
 import mcData from 'minecraft-data'
 
 export class ClientManager {
-  
+
   private client: ServerClient
 
   constructor(private plugin: JavaLink) { }
@@ -23,11 +23,13 @@ export class ClientManager {
 
   private _handlerLogin(client: ServerClient): void {
     this.client = client
-    this.client.username = this.plugin.getApi().getConnection()
-      .getXboxProfile().extraData.displayName
-    this.plugin.getApi().getWorldManager()
-      .sendMessage(`§cJavaLink §r§l§8>§r §e${client.username}§7 Joined the realm!`)
+
+    this.client.username = this.plugin.getApi().getConnection().getXboxProfile().extraData.displayName
+
+    this.plugin.getApi().getWorldManager().sendMessage(`§cJavaLink §r§l§8>§r §e${client.username}§7 Joined the realm!`)
+
     const loginPacket = mcData('1.16.3') as any
+
     this.client.write('login', {
       entityId: client.id,
       isHardcore: false,
@@ -47,14 +49,12 @@ export class ClientManager {
     })
 
     this.client.write('difficulty', {
-      difficulty: this.plugin.getApi().getConnection()
-        .getGameInfo().difficulty,
+      difficulty: this.plugin.getApi().getConnection().getGameInfo().difficulty,
       difficultyLocked: false,
     })
 
     this.sendSpawnPosition()
-    const pos = this.plugin.getApi().getConnection()
-      .getGameInfo().spawn_position
+    const pos = this.plugin.getApi().getConnection().getGameInfo().spawn_position
     this.sendPosition(pos.x, pos.y, pos.z, 0, 0)
     this.updateList()
   }
@@ -62,12 +62,9 @@ export class ClientManager {
   public sendSpawnPosition(): void {
     this.client.write('spawn_position', {
       location: {
-        x: this.plugin.getApi().getConnection()
-          .getGameInfo().spawn_position.x,
-        y: this.plugin.getApi().getConnection()
-          .getGameInfo().spawn_position.x,
-        z: this.plugin.getApi().getConnection()
-          .getGameInfo().spawn_position.x,
+        x: this.plugin.getApi().getConnection().getGameInfo().spawn_position.x,
+        y: this.plugin.getApi().getConnection().getGameInfo().spawn_position.x,
+        z: this.plugin.getApi().getConnection().getGameInfo().spawn_position.x,
       },
     })
   }
@@ -85,8 +82,8 @@ export class ClientManager {
 
   public updateList(): void {
     const listData = []
-    const players = this.plugin.getApi().getPlayerManager()
-      .getPlayerList()
+    const players = this.plugin.getApi().getPlayerManager().getPlayerList()
+
     for (const [, player] of players) {
       listData.push({
         UUID: player.getUUID(),
@@ -96,6 +93,7 @@ export class ClientManager {
         ping: 0,
       })
     }
+
     listData.push({
       UUID: this.client.uuid,
       name: this.client.username,
@@ -103,6 +101,7 @@ export class ClientManager {
       gamemode: 1,
       ping: this.client.latency,
     })
+
     this.client.write('player_info', {
       action: 0,
       data: listData,
@@ -120,17 +119,16 @@ export class ClientManager {
   }
 
   public sendChat(sender: string, message: string): void {
-    this.client
-      .write('chat', {
-        message: JSON.stringify({
-          translate: 'chat.type.announcement',
-          with: [
-            sender,
-            message,
-          ],
-        }),
-        position: 0,
-        sender: sender,
-      })
+    this.client.write('chat', {
+      message: JSON.stringify({
+        translate: 'chat.type.announcement',
+        with: [
+          sender,
+          message,
+        ],
+      }),
+      position: 0,
+      sender: sender,
+    })
   }
 }
