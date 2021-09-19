@@ -1,7 +1,5 @@
 import JavaLink from 'src'
-import {
-  ServerClient,
-} from 'minecraft-protocol'
+import { ServerClient } from 'minecraft-protocol'
 import mcData from 'minecraft-data'
 
 export class ClientManager {

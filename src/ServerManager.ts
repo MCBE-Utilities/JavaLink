@@ -1,8 +1,5 @@
 import { EventEmitter } from 'events'
-import {
-  createServer,
-  Server,
-} from 'minecraft-protocol'
+import { createServer, Server } from 'minecraft-protocol'
 import JavaLink from 'src'
 
 export class ServerManager extends EventEmitter {
