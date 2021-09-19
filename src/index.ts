@@ -5,13 +5,11 @@ import { PacketHandler } from './PacketHandler'
 
 class JavaLink {
 
-  private api: PluginApi
   private serverManager: ServerManager
   private clientManager: ClientManager
   private packetHandler: PacketHandler
 
-  constructor(api: PluginApi) {
-    this.api = api
+  constructor(private api: PluginApi) {
     this.serverManager = new ServerManager(this)
     this.clientManager = new ClientManager(this)
     this.packetHandler = new PacketHandler(this)
