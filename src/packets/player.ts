@@ -1,12 +1,11 @@
 import JavaLink from "src"
 
 export class PlayerPacket {
-  private plugin: JavaLink
+  
   public packetName: "player"
 
-  constructor(plugin: JavaLink) {
-    this.plugin = plugin
-  }
+  constructor(private plugin: JavaLink) { }
+
   public onEnabled(): void {
     this.plugin.getApi().getEventManager()
       .on('PlayerJoin', () => {
@@ -23,7 +22,9 @@ export class PlayerPacket {
         this.plugin.getClientManager().sendMessage(`§e${player.getName()} left the Realm`)
       })
   }
+
   public onDisabled(): void {
     return
   }
+  
 }

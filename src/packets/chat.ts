@@ -1,12 +1,11 @@
 import JavaLink from "src"
 
 export class ChatPacket {
-  private plugin: JavaLink
+  
   public packetName: "chat"
 
-  constructor(plugin: JavaLink) {
-    this.plugin = plugin
-  }
+  constructor(private plugin: JavaLink) { }
+
   public onEnabled(): void {
     this.plugin.getApi().getConnection()
       .on('text', (packet) => {
@@ -30,7 +29,9 @@ export class ChatPacket {
           })
       })
   }
+
   public onDisabled(): void {
     return
   }
+  
 }

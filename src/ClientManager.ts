@@ -5,20 +5,22 @@ import {
 import mcData from 'minecraft-data'
 
 export class ClientManager {
-  private plugin: JavaLink
+  
   private client: ServerClient
 
-  constructor(plugin: JavaLink) {
-    this.plugin = plugin
-  }
+  constructor(private plugin: JavaLink) { }
+
   public onEnabled(): void {
     this.plugin.getServerManager().on('ClientConnected', (client: ServerClient) => this._handlerLogin(client))
   }
+
   public onDisabled(): void {
     if (!this.client) return
     this.client.end('§cJavaLink§r\n\n§7Connection Closed!')
   }
+
   public getClient(): ServerClient { return this.client }
+
   private _handlerLogin(client: ServerClient): void {
     this.client = client
     this.client.username = this.plugin.getApi().getConnection()
@@ -43,17 +45,20 @@ export class ClientManager {
       isDebug: false,
       isFlat: false,
     })
+
     this.client.write('difficulty', {
       difficulty: this.plugin.getApi().getConnection()
         .getGameInfo().difficulty,
       difficultyLocked: false,
     })
+
     this.sendSpawnPosition()
     const pos = this.plugin.getApi().getConnection()
       .getGameInfo().spawn_position
     this.sendPosition(pos.x, pos.y, pos.z, 0, 0)
     this.updateList()
   }
+
   public sendSpawnPosition(): void {
     this.client.write('spawn_position', {
       location: {
@@ -77,6 +82,7 @@ export class ClientManager {
       teleportId: 1,
     })
   }
+
   public updateList(): void {
     const listData = []
     const players = this.plugin.getApi().getPlayerManager()
@@ -102,6 +108,7 @@ export class ClientManager {
       data: listData,
     })
   }
+
   public sendMessage(message: string): void {
     this.client.write('chat', {
       message: JSON.stringify({
@@ -111,6 +118,7 @@ export class ClientManager {
       sender: 'JavaLink',
     })
   }
+
   public sendChat(sender: string, message: string): void {
     this.client
       .write('chat', {
