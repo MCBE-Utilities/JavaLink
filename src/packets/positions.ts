@@ -14,6 +14,6 @@ export class PositionsPacket {
       })
   }
   public onDisabled(): void {
-    //
+    return
   }
 }

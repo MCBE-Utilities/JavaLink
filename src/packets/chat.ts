@@ -31,6 +31,6 @@ export class ChatPacket {
       })
   }
   public onDisabled(): void {
-    //
+    return
   }
 }

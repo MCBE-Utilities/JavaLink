@@ -24,6 +24,6 @@ export class PlayerPacket {
       })
   }
   public onDisabled(): void {
-    //
+    return
   }
 }
