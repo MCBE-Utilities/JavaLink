@@ -12,11 +12,11 @@ export class ChatPacket {
       .on('text', (packet) => {
         if (packet.type != "chat" || packet.source_name == this.plugin.getApi().getConnection()
           .getXboxProfile().extraData.displayName || !this.plugin.getClientManager().getClient()) return
-        this.plugin.getClientManager().sendMessage(packet.source_name, packet.message)
+        this.plugin.getClientManager().sendMessage(`<${packet.source_name}> ${packet.message}`)
       })
     this.plugin.getClientManager().getClient()
       .on('chat', (data) => {
-        this.plugin.getClientManager().sendMessage(this.plugin.getClientManager().getClient().username, data.message)
+        this.plugin.getClientManager().sendMessage(`<${this.plugin.getClientManager().getClient().username}> ${data.message}`)
         this.plugin.getApi().getConnection()
           .sendPacket('text', {
             message: data.message,

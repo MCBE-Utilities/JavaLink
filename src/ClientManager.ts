@@ -43,19 +43,75 @@ export class ClientManager {
       isDebug: false,
       isFlat: false,
     })
-    this.client.write('position', {
-      x: this.plugin.getApi().getConnection()
-        .getGameInfo().spawn_position.x,
-      y: this.plugin.getApi().getConnection()
-        .getGameInfo().spawn_position.y,
-      z: this.plugin.getApi().getConnection()
-        .getGameInfo().spawn_position.z,
-      yaw: 0,
-      pitch: 0,
-      flags: 0x00,
+    this.client.write('difficulty', {
+      difficulty: this.plugin.getApi().getConnection()
+        .getGameInfo().difficulty,
+      difficultyLocked: false,
+    })
+    this.sendSpawnPosition()
+    const pos = this.plugin.getApi().getConnection()
+      .getGameInfo().spawn_position
+    this.sendPosition(pos.x, pos.y, pos.z, 0, 0)
+    this.updateList()
+  }
+  public sendSpawnPosition(): void {
+    this.client.write('spawn_position', {
+      location: {
+        x: this.plugin.getApi().getConnection()
+          .getGameInfo().spawn_position.x,
+        y: this.plugin.getApi().getConnection()
+          .getGameInfo().spawn_position.x,
+        z: this.plugin.getApi().getConnection()
+          .getGameInfo().spawn_position.x,
+      },
     })
   }
-  public sendMessage(sender: string, message: string): void {
+  public sendPosition(x: number, y: number, z: number, yaw: number, pitch: number): void {
+    this.client.write('position', {
+      x: x,
+      y: y,
+      z: z,
+      yaw: yaw,
+      pitch: pitch,
+      flags: 0x00,
+      teleportId: 1,
+    })
+  }
+  public updateList(): void {
+    const listData = []
+    const players = this.plugin.getApi().getPlayerManager()
+      .getPlayerList()
+    for (const [, player] of players) {
+      listData.push({
+        UUID: player.getUUID(),
+        name: player.getName(),
+        properties: player.getSkinData(),
+        gamemode: 0,
+        ping: 0,
+      })
+    }
+    listData.push({
+      UUID: this.client.uuid,
+      name: this.client.username,
+      properties: this.client.profile,
+      gamemode: 1,
+      ping: this.client.latency,
+    })
+    this.client.write('player_info', {
+      action: 0,
+      data: listData,
+    })
+  }
+  public sendMessage(message: string): void {
+    this.client.write('chat', {
+      message: JSON.stringify({
+        text: message,
+      }),
+      position: 0,
+      sender: 'JavaLink',
+    })
+  }
+  public sendChat(sender: string, message: string): void {
     this.client
       .write('chat', {
         message: JSON.stringify({

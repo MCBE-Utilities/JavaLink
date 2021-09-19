@@ -15,7 +15,6 @@ class JavaLink {
       this.clientManager = new ClientManager(this)
       this.packetHandler = new PacketHandler(this)
     }
-
     public onEnabled(): void {
       this.api.getLogger().info('Enabled!')
       this.clientManager.onEnabled()
