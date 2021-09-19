@@ -8,7 +8,7 @@ export class PacketHandler {
   constructor(private plugin: JavaLink) { }
 
   public onEnabled(): void {
-    this.plugin.getServerManager().on('ClientConnected', () => this._loadPackets())
+    this.plugin.getServerManager().on('ClientConnected', () => this.loadPackets())
   }
 
   public onDisabled(): void {
@@ -17,7 +17,7 @@ export class PacketHandler {
     }
   }
 
-  private _loadPackets(): void {
+  private loadPackets(): void {
     for (const packet of defaultPackets) {
       const newPacket = new packet(this.plugin)
       newPacket.onEnabled()

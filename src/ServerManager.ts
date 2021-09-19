@@ -26,9 +26,9 @@ export class ServerManager extends EventEmitter {
     })
 
     this.emit("ServerStarted", this.server)
-    this._listener()
-    this._logs()
-    this._motd()
+    this.listener()
+    this.logs()
+    this.motd()
   }
 
   public onDisabled(): void {
@@ -39,11 +39,11 @@ export class ServerManager extends EventEmitter {
 
   public getServer(): Server { return this.server }
 
-  private _listener(): void {
+  private listener(): void {
     this.server.on('login', (client) => this.emit("ClientConnected", client))
   }
 
-  private _logs(): void {
+  private logs(): void {
     this.server.on('error', (error) => this.plugin.getApi().getLogger()
       .error(error))
     this.server.on('listening', () => this.plugin.getApi().getLogger()
@@ -52,7 +52,7 @@ export class ServerManager extends EventEmitter {
       .info(`${client.username} joined the game!`))
   }
 
-  private _motd(): void {
+  private motd(): void {
     this.inv = setInterval(() => {
       const playerCount = this.plugin.getApi().getPlayerManager()
         .getPlayerList().size

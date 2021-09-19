@@ -11,7 +11,7 @@ export class ClientManager {
   constructor(private plugin: JavaLink) { }
 
   public onEnabled(): void {
-    this.plugin.getServerManager().on('ClientConnected', (client: ServerClient) => this._handlerLogin(client))
+    this.plugin.getServerManager().on('ClientConnected', (client: ServerClient) => this.handlerLogin(client))
   }
 
   public onDisabled(): void {
@@ -21,7 +21,7 @@ export class ClientManager {
 
   public getClient(): ServerClient { return this.client }
 
-  private _handlerLogin(client: ServerClient): void {
+  private handlerLogin(client: ServerClient): void {
     this.client = client
 
     this.client.username = this.plugin.getApi().getConnection().getXboxProfile().extraData.displayName
@@ -68,6 +68,7 @@ export class ClientManager {
       },
     })
   }
+
   public sendPosition(x: number, y: number, z: number, yaw: number, pitch: number): void {
     this.client.write('position', {
       x: x,
