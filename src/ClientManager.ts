@@ -19,8 +19,6 @@ export class ClientManager {
     this.client.end('§cJavaLink§r\n\n§7Connection Closed!')
   }
 
-  public getClient(): ServerClient { return this.client }
-
   private handlerLogin(client: ServerClient): void {
     this.client = client
 
@@ -132,4 +130,6 @@ export class ClientManager {
       sender: sender,
     })
   }
+
+  public getClient(): ServerClient { return this.client }
 }

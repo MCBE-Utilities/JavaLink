@@ -37,8 +37,6 @@ export class ServerManager extends EventEmitter {
     this.emit('ServerClosed')
   }
 
-  public getServer(): Server { return this.server }
-
   private listener(): void {
     this.server.on('login', (client) => this.emit("ClientConnected", client))
   }
@@ -60,4 +58,6 @@ export class ServerManager extends EventEmitter {
       this.server.motd = `§9BeRP JavaLink§r\n§7${this.plugin.getApi().getConnection().realm.name}§r §8|§r §ePlayers: §7${playerCount}§r§8/§710§r`
     }, 20)
   }
+
+  public getServer(): Server { return this.server }
 }
