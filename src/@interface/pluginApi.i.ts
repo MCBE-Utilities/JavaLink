@@ -1,8 +1,6 @@
+import { AccountInfo } from "@azure/msal-node"
 import {
-  AccountInfo,
-} from "@azure/msal-node"
-import {
-  packet_command_output,
+packet_command_output,
   packet_start_game,
   ClientBoundPackets,
   ServerBoundPackets,

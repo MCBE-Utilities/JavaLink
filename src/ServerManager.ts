@@ -1,20 +1,17 @@
 import { EventEmitter } from 'events'
-import {
-  createServer,
-  Server,
-} from 'minecraft-protocol'
+import { createServer, Server } from 'minecraft-protocol'
 import JavaLink from 'src'
 
 export class ServerManager extends EventEmitter {
-  private plugin: JavaLink
+  
   private server: Server
   public port = 25565
   private inv
 
-  constructor(plugin: JavaLink) {
+  constructor(private plugin: JavaLink) {
     super()
-    this.plugin = plugin
   }
+
   public onEnabled(): void {
     this.server = createServer({
       "online-mode": true,
@@ -24,21 +21,24 @@ export class ServerManager extends EventEmitter {
       motd: "§9JavaLink",
       maxPlayers: this.plugin.getApi().getConnection().realm.maxPlayers,
     })
+
     this.emit("ServerStarted", this.server)
-    this._listener()
-    this._logs()
-    this._motd()
+    this.listener()
+    this.logs()
+    this.motd()
   }
+
   public onDisabled(): void {
     clearInterval(this.inv)
     this.server.close()
     this.emit('ServerClosed')
   }
-  public getServer(): Server { return this.server }
-  private _listener(): void {
+
+  private listener(): void {
     this.server.on('login', (client) => this.emit("ClientConnected", client))
   }
-  private _logs(): void {
+
+  private logs(): void {
     this.server.on('error', (error) => this.plugin.getApi().getLogger()
       .error(error))
     this.server.on('listening', () => this.plugin.getApi().getLogger()
@@ -46,7 +46,8 @@ export class ServerManager extends EventEmitter {
     this.server.on('login', (client) => this.plugin.getApi().getLogger()
       .info(`${client.username} joined the game!`))
   }
-  private _motd(): void {
+
+  private motd(): void {
     this.inv = setInterval(() => {
       const playerCount = this.plugin.getApi().getPlayerManager()
         .getPlayerList().size
@@ -54,4 +55,6 @@ export class ServerManager extends EventEmitter {
       this.server.motd = `§9BeRP JavaLink§r\n§7${this.plugin.getApi().getConnection().realm.name}§r §8|§r §ePlayers: §7${playerCount}§r§8/§710§r`
     }, 20)
   }
+
+  public getServer(): Server { return this.server }
 }
